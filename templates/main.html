@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="data:image/x-icon;base64,AAABAAEAEBAAAAAAAABoBQAAFgAAACgAAAAQAAAAIAAAAAEACAAAAAAAAAEAAAAAAAAAAAAAAAEAAAAAAAAAAAAAYWHcADs7owAlJcEAMjK9AF9f4gBpadYAV1bjABoarwA0NOEANDW9ACgo2gAmJscAKCnoAD0+5gBCQrEAMTLfACoq3QCWlusAMjO7ACss6ABNTdQANDTqAGNj6ABXV8gAPj7eAFpa6QAvL+gARUWQADo7zgA1Nb4AMzPlADQ0wQBkZO4ATEzgAICA2ABOTusALy/YADIyjQAHBwcAMTHjAGBg4QA9Pt8AOzvXABwduQBAQOoASEjsAHNy8AA3N+sAMTK3AIOD6QBFRcMABQUFAFxc5QCFhdMAJyeEAFJStwAxMXgAAwMDAF9gwQCIiOwAR0iaADk5xQA5Od4AXFzVAEZG2gA8PN4AZ2fXAImJ8gA6OngAZWWrADU1yQBkZMcAJCRcACsqbABRUe0AVVW4ADg4lwBdXZkALi/KAENDgABcXO8ALSzbAFBQ6ABBQdkAPj7RAD4+6gBxcuIAJyfZACgonAB5euQAFRWpAE9OmwBPUKYAJSXfAEZGkQBISIMAR0fAAHNz6ABUVO4Aj5DoAERFpQAuLnsANjbQAAgICABsbeEARUTaADIywwAnJ9IAQULHADIy3ABTU6cAaGjfADAwyQAGBgYALy+zAJCQ0ABeXc0AOTnZAGho1wAuLugAR0jgAExNhwAtLeMATEyjAD0+qgAoKK8AY2PmAFJS5QACAgIAKSinAC0tugBOTr8AODjEAFRU6AAxMNsATE3bAD8/4gCsreIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3AmV8X2AAJwAAAAAAJ4IKa0BDdYRNHFAAAAAAAIMDblIJGUJ2R2FvRQA6ABMrew0wLSQQiQVwd1x6AABsWBF4HxYUDlMiB4hIPQAeZ1U1fy9RVi6GFzwyaQ9mT1Q/VQAARGMbLQAAihJtXRVqLAAAAAAhXjoAAABkAX0YBAAAAAAASyUAOgAAAFczOzEAAAAAACoIAAAAAAAGPkZzAAAAAAAoWwAAAAAAQX4AOAAAAAB5GgsgADQAAIAAAE45AAAjNmKHDHEAACZZAIEATAAAAABaHQAAAAApAAAAAABJAAAAdIVyAABKAAAAAAAAaAAAAIEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" rel="icon" type="image/x-icon" />
+    <title>apiWars</title>
+
+    <script src="../static/js/jQuery.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous" async></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous" async></script>
+
+</head>
+<body>
+<div class="container-fluid">
+    <h1 class="mt-4">Star Wars universe planets</h1>
+    {% if prev_link != None %}<a class="btn btn-outline-secondary mb-4" href="{{ url_for('main_page', page_number=page_number - 1) }}">Previous</a>{% endif %}
+    {% if next_link != None %}<a class="btn btn-outline-secondary mb-4" href="{{ url_for('main_page', page_number=page_number + 1) }}">Next</a>{% endif %}
+
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <tr>
+                <th>Name</th>
+                <th>Diameter</th>
+                <th>Climate</th>
+                <th>Terrain</th>
+                <th>Surface water percentage</th>
+                <th>Population</th>
+                <th>Residents</th>
+                {% if logged_in != 0 %}<th></th>{% endif %}
+            </tr>
+            {% for planet in planets %}
+            <tr>
+                <td>{{planet.name}}</td>
+                <td>{% if planet.diameter != 'unknown' %}
+                        {{ "{:,}".format(planet.diameter|int) }} km
+                    {% else %}
+                        unknown
+                    {% endif %}</td>
+                <td>{{planet.climate}}</td>
+                <td>{{planet.terrain}}</td>
+                <td>{{planet.surface_water}}
+                    {% if planet.surface_water != 'unknown' %}%{% endif %}</td>
+                <td>{% if planet.population != 'unknown' %}
+                        {{ "{:,}".format(planet.population|int) }} people
+                    {% else %}
+                        unknown
+                    {% endif %}</td>
+                <td>
+                    {% if planet.residents|length == 0 %}
+                        No known residents
+                    {% else %}
+                        <button type="button" class="btn" id="residentsButton{{ planet.name|replace(" ","") }}" data-toggle="modal" data-target="#residentModal">
+                         {{ planet.residents|length }} resident(s)
+                        </button>
+                        <script>
+
+                            $("#residentsButton{{ planet.name|replace(" ","")  }}").click(function(){
+
+                                let tableHeader = $("<tr></tr>").html(
+                                        "<th> Name </th>" +
+                                        "<th> Height</th>" +
+                                        "<th> Mass </th>" +
+                                        "<th> Hair color </th>" +
+                                        "<th> Skin color </th>" +
+                                        "<th> Eye color </th>" +
+                                        "<th> Birth year </th>" +
+                                        "<th> Gender </th>"
+                                        );
+
+                                $("#residentModalLabel").text("Residents of {{ planet.name }}");
+                                $("#tableModal").empty().append(tableHeader);
+
+                                {% for resident in planet.residents %}
+
+                                    $.getJSON("{{ resident }}", function (response) {
+
+                                        let tableRow = $("<tr></tr>").html(
+                                            "<td>" + response.name + "</td>" +
+                                            "<td>" + response.height + "</td>" +
+                                            "<td>" + response.mass + "</td>" +
+                                            "<td>" + response.hair_color + "</td>" +
+                                            "<td>" + response.skin_color + "</td>" +
+                                            "<td>" + response.eye_color + "</td>" +
+                                            "<td>" + response.birth_year + "</td>" +
+                                            "<td>" + response.gender + "</td>");
+
+                                        $("#tableModal").append(tableRow)
+                                    });
+                                {% endfor %}
+                            });
+                        </script>
+                    {% endif %}
+                </td>
+                {% if logged_in != 0 %}<td><button class="btn">Vote</button></td>{% endif %}
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
+<!-- residentModal -->
+<div class="modal fade" id="residentModal"  tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="residentModalLabel"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table" id="tableModal">
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
